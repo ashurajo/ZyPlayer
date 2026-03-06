@@ -10,9 +10,9 @@ import sys
 from typing import Any, Dict, List, Optional
 import zmq
 
-
 signal.signal(signal.SIGINT, lambda signum, frame: sys.exit(130))
 builtins.original_print = builtins.print
+
 
 def custom_print(*args: Any, **kwargs: Any) -> None:
     try:
@@ -20,7 +20,7 @@ def custom_print(*args: Any, **kwargs: Any) -> None:
             "type": "multiple" if len(args) > 0 else "single",
             "msg": [*args, *[f'{k}={v}' for k, v in kwargs.items()]]
         }
-        builtins.original_print(log) # type: ignore[attr-defined]
+        builtins.original_print(log)  # type: ignore[attr-defined]
         log_socket.send_string(json.dumps(log, ensure_ascii=False))
     except zmq.ZMQError:
         pass
@@ -74,10 +74,13 @@ def get_spider(code_hash: int, code_str: str) -> Any:
 
 
 def core(method: str, source_code: str, opts: List[Any]) -> Any:
+    # print(f"Received request: method={method}, options={opts}")
+
+    if not source_code:
+        raise RuntimeError(f"Source content is empty")
+
     uuid = hash(source_code)
     spider = get_spider(uuid, source_code)
-
-    # print(f"Received request: method={method}, options={opts}")
 
     method_obj = getattr(spider, method, None)
     if not method_obj:
@@ -86,7 +89,7 @@ def core(method: str, source_code: str, opts: List[Any]) -> Any:
     try:
         return sync_wrapper(method_obj, opts)
     except Exception as exc:
-        raise RuntimeError(f"Failed to execute method '{method_name}': {exc}") from exc
+        raise RuntimeError(f"Failed to execute method '{method}': {exc}") from exc
 
 
 if __name__ == '__main__':
@@ -116,6 +119,7 @@ if __name__ == '__main__':
                 code: str = request.get("code", "")
                 method_name: str = request.get("type", "")
                 options: List[Any] = request.get("options", [])
+
                 if method_name == "init":
                     if not options:
                         options = ['']
@@ -125,14 +129,17 @@ if __name__ == '__main__':
                 ctrl_socket.send_string(json.dumps(res, ensure_ascii=False))
 
             except Exception as e:
-                ctrl_socket.send_string(json.dumps({"error": str(e)}, ensure_ascii=False))
+                log_socket.send_string(
+                    json.dumps({"type": "single", "msg": [f"Failed to execute, cause: {str(e) or 'Unknown error'}"]},
+                               ensure_ascii=False))
+                ctrl_socket.send_string(json.dumps({"error": f"{str(e) or 'Unknown error'}"}, ensure_ascii=False))
 
     except SystemExit:
-        sys.stdout.write('Spider ZMQ server exiting...')
+        sys.stdout.write("Spider ZMQ server exited")
         sys.stdout.flush()
         sys.exit(130)
 
-    except Exception as main_exc:
-        sys.stdout.write(str(main_exc))
+    except Exception as main_e:
+        sys.stdout.write(f"Spider exited: {str(main_e)}")
         sys.stdout.flush()
         sys.exit(1)

@@ -12,21 +12,26 @@ import * as zmq from 'zeromq';
 
 const logger = loggerService.withContext(SITE_LOGGER_MAP[SITE_TYPE.T3_PY]);
 
+zmq.context.blocky = false;
+
 const loggerModule = async (port: number) => {
-  try {
-    const workerpool = await import('workerpool');
-    const zmq = await import('zeromq');
+  const workerpool = await import('workerpool');
+  const zmq = await import('zeromq');
 
-    const sock = new zmq.Subscriber();
-    sock.connect(`tcp://127.0.0.1:${port}`);
-    sock.subscribe('');
+  zmq.context.blocky = false;
 
-    for await (const [msgRaw] of sock) {
-      const msg = JSON.parse(msgRaw as unknown as string);
+  const sock = new zmq.Subscriber();
+  sock.linger = 0;
+  sock.connect(`tcp://127.0.0.1:${port}`);
+  sock.subscribe('');
+
+  for await (const [msgRaw] of sock) {
+    try {
+      const msg = JSON.parse(msgRaw.toString());
       workerpool.workerEmit({ type: 'log', level: 'verbose', msg });
+    } catch {
+      workerpool.workerEmit({ type: 'log', level: 'error', msg: 'Failed to parse log message' });
     }
-  } catch (error) {
-    workerpool.workerEmit({ type: 'log', level: 'error', msg: (error as Error).message });
   }
 };
 
@@ -84,11 +89,12 @@ class ConnectService extends PythonService {
     }
   }
 
-  private connectApi(): void {
+  private async connectApi(): Promise<void> {
     if (this.socket) return;
 
     try {
       const ctrlSocket = new zmq.Request();
+      ctrlSocket.linger = 0;
       ctrlSocket.connect(`tcp://127.0.0.1:${this.ctrlPort}`);
       this.socket = ctrlSocket;
     } catch (error) {
@@ -99,15 +105,14 @@ class ConnectService extends PythonService {
 
   private async connect(): Promise<void> {
     this.connectLogger();
-    this.connectApi();
+    await this.connectApi();
   }
 
   public async prepare(): Promise<void> {
     this.checkBinary();
     await this.installDep();
 
-    const args = [this.uvBinaryPath, 'run', 'main.py', '--ctrl-port', String(this.ctrlPort)];
-
+    const args = ['main.py', '--ctrl-port', String(this.ctrlPort)];
     const pids = await this.matchProcess(args.join(' '));
 
     if (pids.length) {
@@ -117,13 +122,19 @@ class ConnectService extends PythonService {
     }
 
     try {
-      this.runSpawn(['main.py', '--ctrl-port', String(this.ctrlPort)]);
-
-      const pids = await this.matchProcess(args.join(' '));
-      if (pids.length) {
-        this.pids = pids;
-        await this.connect();
-      }
+      await new Promise((resolve, reject) =>
+        this.runSpawn(['main.py', '--ctrl-port', String(this.ctrlPort)], {
+          stdoutCb: async () => {
+            const pids = await this.matchProcess(args.join(' '));
+            if (pids.length) {
+              this.pids = pids;
+              await this.connect();
+              resolve('Python t3Py service started successfully');
+            }
+            reject(new Error('Process did not start as expected'));
+          },
+        }),
+      );
     } catch (error) {
       throw new Error(`Failed to start Python t3Py service: ${error}`);
     }
@@ -131,26 +142,22 @@ class ConnectService extends PythonService {
 
   public async terminate(): Promise<void> {
     try {
-      if (this.socket) {
-        this.socket.close();
-        this.socket = null;
-      }
+      // ctrl socket
+      if (this.socket) this.socket.close();
+      this.socket = null;
 
-      if (this.pool) {
-        await this.pool.terminate(true);
-        this.pool = null;
-      }
+      // log socket
+      if (this.pool) await this.pool.terminate(true);
+      this.pool = null;
 
+      // process
       if (!this.pids.length) {
-        const args = [this.uvBinaryPath, 'run', 'main.py', '--ctrl-port', String(this.ctrlPort)];
+        const args = ['main.py', '--ctrl-port', String(this.ctrlPort)];
         const pids = await this.matchProcess(args.join(' '));
         if (pids.length) this.pids = pids;
       }
 
-      if (this.pids.length) {
-        await this.killProcess(this.pids);
-      }
-
+      if (this.pids.length) await this.killProcess(this.pids);
       this.pids = [];
     } catch (error) {
       logger.error('Error during termination:', error as Error);
@@ -170,7 +177,6 @@ export class T3PyAdapter {
   ext: string = '';
 
   code: string = '';
-  pids: number[] = [];
 
   constructor(source: IConstructorOptions) {
     this.api = source.api!;
@@ -186,7 +192,7 @@ export class T3PyAdapter {
     await connectService.terminate();
   }
 
-  async execCtx(type: string, options: any[] = []): Promise<any> {
+  private async execCtx(type: string, options: any[] = []): Promise<any> {
     const socket = connectService.getSocket();
     if (!socket) {
       throw new Error('Socket is not initialized.');
@@ -197,9 +203,7 @@ export class T3PyAdapter {
     const [reply] = await socket.receive();
     const result = JSON.parse(reply.toString());
 
-    if (result?.error) {
-      throw new Error(result.error);
-    }
+    if (result?.error) throw new Error(result.error);
 
     return result;
   }

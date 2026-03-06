@@ -10,7 +10,7 @@
 - 优化: 鸿蒙操作系统标识识别
 - 优化: webview组件 src参数以支持默认加载
 - 优化: github action cicd引用仓库node版本
-- 修复: 影视 适配器初始化失败无具体报错信息; 适配器类型标注优化; T3Alist和T3Catopen适配器ext参数序列化处理, T3Drpy和T3Catopen缓存冲突
+- 修复: 影视 适配器初始化失败无具体报错信息; 适配器类型标注优化; T3Alist和T3Catopen适配器ext参数序列化处理, T3Drpy和T3Catopen缓存冲突; T3Py适配器引用错误参数, 关闭时zmq有未返回时将阻塞主进程, 启动时获取pid不全, 部分情况进程异常退出;
 - 修复: 实验室-写源工具 首次加载非js适配器时提示语法报错
 - 修复: 直播配置 上传时文件筛选参数错误
 - 修复: 同步请求模块 application/json处理错误
