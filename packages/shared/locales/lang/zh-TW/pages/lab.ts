@@ -115,7 +115,7 @@ export default {
     target: '目標',
     diff: '對比',
   },
-  edit: {
+  ide: {
     title: '寫源工具',
     nav: {
       template: '模板',
@@ -195,6 +195,7 @@ export default {
       copyFinalSift: '復製最終篩選',
     },
     debug: {
+      dom: '節點',
       data: '數據',
     },
     placeholder: {

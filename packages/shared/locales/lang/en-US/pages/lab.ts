@@ -115,8 +115,8 @@ export default {
     target: 'Target',
     diff: 'Comparison',
   },
-  edit: {
-    title: 'Source Editor',
+  ide: {
+    title: 'Ide',
     nav: {
       template: 'Template',
       file: {
@@ -189,6 +189,7 @@ export default {
       },
     },
     debug: {
+      dom: 'Dom',
       data: 'Data',
     },
     action: {

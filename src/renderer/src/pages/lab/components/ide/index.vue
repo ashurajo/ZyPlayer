@@ -12,7 +12,7 @@
           <t-option v-for="item in TYPE_OPTIONS" :key="item.value" :value="item.value" :label="item.label" />
         </t-select>
         <t-button class="init" theme="default" auto-width @click="handleOpInitMode">
-          {{ $t('pages.lab.edit.action.init') }}: {{ active.init ? $t('common.auto') : $t('common.manual') }}
+          {{ $t('pages.lab.ide.action.init') }}: {{ active.init ? $t('common.auto') : $t('common.manual') }}
         </t-button>
       </div>
       <div class="right-operation-container">
@@ -66,7 +66,7 @@
             <pane>
               <div class="action-pane">
                 <t-tabs v-model="active.action" theme="card" lazy class="pane-right">
-                  <t-tab-panel :label="$t('pages.lab.edit.debug.dom')" value="dom">
+                  <t-tab-panel :label="$t('pages.lab.ide.debug.dom')" value="dom">
                     <div class="action-pane-dom">
                       <div class="action-item req-item">
                         <input-req
@@ -79,8 +79,8 @@
                       <div class="action-item">
                         <t-input
                           v-model="domFormData.pdfa"
-                          :label="$t('pages.lab.edit.rule.pdfa')"
-                          :placeholder="$t('pages.lab.edit.placeholder.pdfa')"
+                          :label="$t('pages.lab.ide.rule.pdfa')"
+                          :placeholder="$t('pages.lab.ide.placeholder.pdfa')"
                         />
                         <t-button
                           theme="primary"
@@ -95,8 +95,8 @@
                       <div class="action-item">
                         <t-input
                           v-model="domFormData.pdfh"
-                          :label="$t('pages.lab.edit.rule.pdfh')"
-                          :placeholder="$t('pages.lab.edit.placeholder.pdfh')"
+                          :label="$t('pages.lab.ide.rule.pdfh')"
+                          :placeholder="$t('pages.lab.ide.placeholder.pdfh')"
                         />
                         <t-button
                           theme="primary"
@@ -110,7 +110,7 @@
                       </div>
                     </div>
                   </t-tab-panel>
-                  <t-tab-panel :label="$t('pages.lab.edit.debug.data')" value="data">
+                  <t-tab-panel :label="$t('pages.lab.ide.debug.data')" value="data">
                     <div class="action-pane-data">
                       <div class="action-item action-base">
                         <t-button
@@ -119,7 +119,7 @@
                           :loading="dataLoading.init"
                           @click="handleDataDebugInit"
                         >
-                          {{ $t('pages.lab.edit.action.init') }}
+                          {{ $t('pages.lab.ide.action.init') }}
                         </t-button>
                         <t-button
                           theme="primary"
@@ -127,7 +127,7 @@
                           :loading="dataLoading.home"
                           @click="handleDataDebugHome"
                         >
-                          {{ $t('pages.lab.edit.action.home') }}
+                          {{ $t('pages.lab.ide.action.home') }}
                         </t-button>
                         <t-button
                           theme="primary"
@@ -135,17 +135,17 @@
                           :loading="dataLoading.homeVod"
                           @click="handleDataDebugHomeVod"
                         >
-                          {{ $t('pages.lab.edit.action.homeVod') }}
+                          {{ $t('pages.lab.ide.action.homeVod') }}
                         </t-button>
                       </div>
                       <div class="action-item">
-                        <t-input v-model="dataFormData.category.tid" :label="$t('pages.lab.edit.rule.tid')" />
-                        <t-input v-model="dataFormData.category.filter" :label="$t('pages.lab.edit.rule.filter')" />
+                        <t-input v-model="dataFormData.category.tid" :label="$t('pages.lab.ide.rule.tid')" />
+                        <t-input v-model="dataFormData.category.filter" :label="$t('pages.lab.ide.rule.filter')" />
                         <t-input-number
                           v-model="dataFormData.category.page"
                           theme="column"
                           :min="0"
-                          :label="$t('pages.lab.edit.rule.page')"
+                          :label="$t('pages.lab.ide.rule.page')"
                           class="input-number-item"
                         />
                         <t-button
@@ -155,11 +155,11 @@
                           :loading="dataLoading.category"
                           @click="handleDataDebugCategory"
                         >
-                          {{ $t('pages.lab.edit.action.category') }}
+                          {{ $t('pages.lab.ide.action.category') }}
                         </t-button>
                       </div>
                       <div class="action-item">
-                        <t-input v-model="dataFormData.detail.ids" :label="$t('pages.lab.edit.rule.ids')" />
+                        <t-input v-model="dataFormData.detail.ids" :label="$t('pages.lab.ide.rule.ids')" />
                         <t-button
                           theme="primary"
                           variant="base"
@@ -167,16 +167,16 @@
                           :loading="dataLoading.detail"
                           @click="handleDataDebugDetail"
                         >
-                          {{ $t('pages.lab.edit.action.detail') }}
+                          {{ $t('pages.lab.ide.action.detail') }}
                         </t-button>
                       </div>
                       <div class="action-item">
-                        <t-input v-model="dataFormData.search.wd" :label="$t('pages.lab.edit.rule.wd')" />
+                        <t-input v-model="dataFormData.search.wd" :label="$t('pages.lab.ide.rule.wd')" />
                         <t-input-number
                           v-model="dataFormData.search.page"
                           theme="column"
                           :min="0"
-                          :label="$t('pages.lab.edit.rule.page')"
+                          :label="$t('pages.lab.ide.rule.page')"
                           class="input-number-item"
                         />
                         <t-button
@@ -186,12 +186,12 @@
                           :loading="dataLoading.search"
                           @click="handleDataDebugSearch"
                         >
-                          {{ $t('pages.lab.edit.action.search') }}
+                          {{ $t('pages.lab.ide.action.search') }}
                         </t-button>
                       </div>
                       <div class="action-item">
-                        <t-input v-model="dataFormData.play.flag" :label="$t('pages.lab.edit.rule.flag')" />
-                        <t-input v-model="dataFormData.play.play" :label="$t('pages.lab.edit.rule.play')" />
+                        <t-input v-model="dataFormData.play.flag" :label="$t('pages.lab.ide.rule.flag')" />
+                        <t-input v-model="dataFormData.play.play" :label="$t('pages.lab.ide.rule.play')" />
                         <t-button
                           theme="primary"
                           variant="base"
@@ -199,11 +199,11 @@
                           :loading="dataLoading.play"
                           @click="handleDataDebugPlay"
                         >
-                          {{ $t('pages.lab.edit.action.play') }}
+                          {{ $t('pages.lab.ide.action.play') }}
                         </t-button>
                       </div>
                       <div class="action-item">
-                        <t-input v-model="dataFormData.proxy.url" :label="$t('pages.lab.edit.rule.url')" />
+                        <t-input v-model="dataFormData.proxy.url" :label="$t('pages.lab.ide.rule.url')" />
                         <t-button
                           theme="primary"
                           variant="base"
@@ -211,13 +211,13 @@
                           :loading="dataLoading.proxy"
                           @click="handleDataDebugProxy"
                         >
-                          {{ $t('pages.lab.edit.action.proxy') }}
+                          {{ $t('pages.lab.ide.action.proxy') }}
                         </t-button>
                       </div>
                       <div class="action-item">
                         <t-textarea
                           v-model="dataFormData.proxy.upload"
-                          :placeholder="$t('pages.lab.edit.placeholder.proxyUpload')"
+                          :placeholder="$t('pages.lab.ide.placeholder.proxyUpload')"
                           :autosize="{ minRows: 3, maxRows: 5 }"
                         />
                         <t-button
@@ -227,7 +227,7 @@
                           :loading="dataLoading.proxyUpload"
                           @click="handleDataDebugProxyUpload"
                         >
-                          {{ $t('pages.lab.edit.action.proxyUpload') }}
+                          {{ $t('pages.lab.ide.action.proxyUpload') }}
                         </t-button>
                       </div>
                     </div>
@@ -347,17 +347,17 @@ const router = useRouter();
 const storeSetting = useSettingStore();
 
 const op = computed(() => [
-  { label: t('pages.lab.edit.nav.template'), value: 'template' },
+  { label: t('pages.lab.ide.nav.template'), value: 'template' },
   {
-    label: t('pages.lab.edit.nav.file.title'),
+    label: t('pages.lab.ide.nav.file.title'),
     value: [
-      { label: t('pages.lab.edit.nav.file.folder'), value: 'file:openFolder' },
-      { label: t('pages.lab.edit.nav.file.import'), value: 'file:import' },
-      { label: t('pages.lab.edit.nav.file.export'), value: 'file:export' },
+      { label: t('pages.lab.ide.nav.file.folder'), value: 'file:openFolder' },
+      { label: t('pages.lab.ide.nav.file.import'), value: 'file:import' },
+      { label: t('pages.lab.ide.nav.file.export'), value: 'file:export' },
     ],
   },
-  { label: t('pages.lab.edit.nav.decode'), value: 'decode' },
-  { label: t('pages.lab.edit.nav.debug'), value: 'debug' },
+  { label: t('pages.lab.ide.nav.decode'), value: 'decode' },
+  { label: t('pages.lab.ide.nav.debug'), value: 'debug' },
   { label: t('common.help'), value: 'help' },
 ]);
 const TYPE_OPTIONS = computed(() => [
@@ -540,7 +540,7 @@ const setup = async () => {
   const { id, type } = siteData.value;
 
   if (isNil(id)) {
-    MessagePlugin.warning(t('pages.lab.edit.message.noInitSource'));
+    MessagePlugin.warning(t('pages.lab.ide.message.noInitSource'));
     return;
   }
 
@@ -695,7 +695,7 @@ const handleOpExportFile = async () => {
     const content = editText.value.code;
 
     if (!isString(content) || isStrEmpty(content)) {
-      MessagePlugin.warning(t('pages.lab.edit.message.codeNoData'));
+      MessagePlugin.warning(t('pages.lab.ide.message.codeNoData'));
       return;
     }
 
@@ -714,7 +714,7 @@ const handleOpDecode = async () => {
     const content = editText.value.code;
 
     if (!isString(content) || isStrEmpty(content)) {
-      MessagePlugin.warning(t('pages.lab.edit.message.codeNoData'));
+      MessagePlugin.warning(t('pages.lab.ide.message.codeNoData'));
       return;
     }
 
@@ -738,7 +738,7 @@ const handleOpDebug = async () => {
     const uuid = siteData.value.id;
 
     if (!isString(content) || isStrEmpty(content)) {
-      MessagePlugin.warning(t('pages.lab.edit.message.codeNoData'));
+      MessagePlugin.warning(t('pages.lab.ide.message.codeNoData'));
       return;
     }
 
@@ -818,7 +818,7 @@ const handleDomDebugPdfa = async () => {
     }
 
     if (!isString(html) || isStrEmpty(html)) {
-      MessagePlugin.warning(t('pages.lab.edit.message.htmlNoData'));
+      MessagePlugin.warning(t('pages.lab.ide.message.htmlNoData'));
       return;
     }
 
@@ -846,7 +846,7 @@ const handleDomDebugPdfh = async () => {
     }
 
     if (!isString(html) || isStrEmpty(html)) {
-      MessagePlugin.warning(t('pages.lab.edit.message.htmlNoData'));
+      MessagePlugin.warning(t('pages.lab.ide.message.htmlNoData'));
       return;
     }
 
@@ -865,7 +865,7 @@ const handleDomDebugPdfh = async () => {
 // data
 const handleDataDebugInit = async () => {
   if (isNil(siteData.value?.id)) {
-    MessagePlugin.warning(t('pages.lab.edit.message.noInitSource'));
+    MessagePlugin.warning(t('pages.lab.ide.message.noInitSource'));
     return;
   }
 
@@ -875,7 +875,7 @@ const handleDataDebugInit = async () => {
     const code = editText.value.code;
 
     if (!isString(code) || isStrEmpty(code)) {
-      MessagePlugin.warning(t('pages.lab.edit.message.codeNoData'));
+      MessagePlugin.warning(t('pages.lab.ide.message.codeNoData'));
       return;
     }
 
@@ -895,7 +895,7 @@ const handleDataDebugInit = async () => {
 
 const handleDataDebugHome = async () => {
   if (isNil(siteData.value?.id)) {
-    MessagePlugin.warning(t('pages.lab.edit.message.noInitSource'));
+    MessagePlugin.warning(t('pages.lab.ide.message.noInitSource'));
     return;
   }
 
@@ -905,7 +905,7 @@ const handleDataDebugHome = async () => {
     const code = editText.value.code;
 
     if (!isString(code) || isStrEmpty(code)) {
-      MessagePlugin.warning(t('pages.lab.edit.message.codeNoData'));
+      MessagePlugin.warning(t('pages.lab.ide.message.codeNoData'));
       return;
     }
 
@@ -923,7 +923,7 @@ const handleDataDebugHome = async () => {
 
 const handleDataDebugHomeVod = async () => {
   if (isNil(siteData.value?.id)) {
-    MessagePlugin.warning(t('pages.lab.edit.message.noInitSource'));
+    MessagePlugin.warning(t('pages.lab.ide.message.noInitSource'));
     return;
   }
 
@@ -933,7 +933,7 @@ const handleDataDebugHomeVod = async () => {
     const code = editText.value.code;
 
     if (!isString(code) || isStrEmpty(code)) {
-      MessagePlugin.warning(t('pages.lab.edit.message.codeNoData'));
+      MessagePlugin.warning(t('pages.lab.ide.message.codeNoData'));
       return;
     }
 
@@ -951,7 +951,7 @@ const handleDataDebugHomeVod = async () => {
 
 const handleDataDebugCategory = async () => {
   if (isNil(siteData.value?.id)) {
-    MessagePlugin.warning(t('pages.lab.edit.message.noInitSource'));
+    MessagePlugin.warning(t('pages.lab.ide.message.noInitSource'));
     return;
   }
 
@@ -962,7 +962,7 @@ const handleDataDebugCategory = async () => {
     const code = editText.value.code;
 
     if (!isString(code) || isStrEmpty(code)) {
-      MessagePlugin.warning(t('pages.lab.edit.message.codeNoData'));
+      MessagePlugin.warning(t('pages.lab.ide.message.codeNoData'));
       return;
     }
 
@@ -993,7 +993,7 @@ const handleDataDebugCategory = async () => {
 
 const handleDataDebugDetail = async () => {
   if (isNil(siteData.value?.id)) {
-    MessagePlugin.warning(t('pages.lab.edit.message.noInitSource'));
+    MessagePlugin.warning(t('pages.lab.ide.message.noInitSource'));
     return;
   }
 
@@ -1004,7 +1004,7 @@ const handleDataDebugDetail = async () => {
     const code = editText.value.code;
 
     if (!isString(code) || isStrEmpty(code)) {
-      MessagePlugin.warning(t('pages.lab.edit.message.codeNoData'));
+      MessagePlugin.warning(t('pages.lab.ide.message.codeNoData'));
       return;
     }
 
@@ -1027,7 +1027,7 @@ const handleDataDebugDetail = async () => {
 
 const handleDataDebugSearch = async () => {
   if (isNil(siteData.value?.id)) {
-    MessagePlugin.warning(t('pages.lab.edit.message.noInitSource'));
+    MessagePlugin.warning(t('pages.lab.ide.message.noInitSource'));
     return;
   }
 
@@ -1038,7 +1038,7 @@ const handleDataDebugSearch = async () => {
     const code = editText.value.code;
 
     if (!isString(code) || isStrEmpty(code)) {
-      MessagePlugin.warning(t('pages.lab.edit.message.codeNoData'));
+      MessagePlugin.warning(t('pages.lab.ide.message.codeNoData'));
       return;
     }
 
@@ -1061,7 +1061,7 @@ const handleDataDebugSearch = async () => {
 
 const handleDataDebugPlay = async () => {
   if (isNil(siteData.value?.id)) {
-    MessagePlugin.warning(t('pages.lab.edit.message.noInitSource'));
+    MessagePlugin.warning(t('pages.lab.ide.message.noInitSource'));
     return;
   }
 
@@ -1072,7 +1072,7 @@ const handleDataDebugPlay = async () => {
     const code = editText.value.code;
 
     if (!isString(code) || isStrEmpty(code)) {
-      MessagePlugin.warning(t('pages.lab.edit.message.codeNoData'));
+      MessagePlugin.warning(t('pages.lab.ide.message.codeNoData'));
       return;
     }
 
@@ -1101,7 +1101,7 @@ const handleDataDebugPlay = async () => {
 
 const handleDataDebugProxy = async () => {
   if (isNil(siteData.value?.id)) {
-    MessagePlugin.warning(t('pages.lab.edit.message.noInitSource'));
+    MessagePlugin.warning(t('pages.lab.ide.message.noInitSource'));
     return;
   }
 
@@ -1112,7 +1112,7 @@ const handleDataDebugProxy = async () => {
     const code = editText.value.code;
 
     if (!isString(code) || isStrEmpty(code)) {
-      MessagePlugin.warning(t('pages.lab.edit.message.codeNoData'));
+      MessagePlugin.warning(t('pages.lab.ide.message.codeNoData'));
       return;
     }
 

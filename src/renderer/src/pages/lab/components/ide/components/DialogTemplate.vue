@@ -8,7 +8,7 @@
     lazy
   >
     <template #header>
-      {{ $t('pages.lab.edit.nav.template') }}
+      {{ $t('pages.lab.ide.nav.template') }}
     </template>
     <template #body>
       <div class="template view-container">
@@ -22,7 +22,7 @@
           reset-type="initial"
           @submit="onSubmit"
         >
-          <t-form-item name="template" :label="$t('pages.lab.edit.nav.template')">
+          <t-form-item name="template" :label="$t('pages.lab.ide.nav.template')">
             <t-select v-model="formData.template" :popup-props="popupProps">
               <t-option v-for="(item, index) in templateFormData" :key="index" :value="item" :label="item" />
             </t-select>
