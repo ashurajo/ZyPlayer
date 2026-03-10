@@ -56,5 +56,8 @@ export const CMS_ACTION_SPECIAL_ID_TYPE = {
   REFRESH_LIST: '__refresh_list__',
   COPY: '__copy__',
   KEEP: '__keep__',
+  COMMENT_CLOSE: '__comment_close__',
 } as const;
 export type ICmsActionSpecialIdType = (typeof CMS_ACTION_SPECIAL_ID_TYPE)[keyof typeof CMS_ACTION_SPECIAL_ID_TYPE];
+export const CMS_ACTION_SPECIAL_ID_TYPES = Object.values(CMS_ACTION_SPECIAL_ID_TYPE);
+export type ICmsActionSpecialIdTypes = keyof typeof CMS_ACTION_SPECIAL_ID_TYPES;
